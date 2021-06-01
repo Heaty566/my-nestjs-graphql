@@ -20,13 +20,13 @@ export class User {
     @Column({ default: '' })
     avatarUrl: string;
 
-    @Column({ default: '', unique: true })
+    @Column({ default: '' })
     googleId: string;
 
-    @Column({ default: '', unique: true })
+    @Column({ default: '' })
     facebookId: string;
 
-    @Column({ default: '', unique: true })
+    @Column({ default: '' })
     githubId: string;
 
     @Column({ default: new Date().toISOString().slice(0, 19).replace('T', ' ') })

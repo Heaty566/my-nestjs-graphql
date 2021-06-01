@@ -1,4 +1,4 @@
-import { UserInputError } from 'apollo-server-errors';
+import { UserInputError } from 'apollo-server-express';
 import { LocalesService } from '../../utils/locales/locales.service';
 import { BodyDetailsLocate } from './api.interface';
 
@@ -12,7 +12,7 @@ class ApiResponse {
     public send<T>(data: T, details: BodyDetailsLocate) {
         const detailsFormat = this.localeService.translateDetails(details);
 
-        return { details: detailsFormat, data };
+        return { details: JSON.stringify(detailsFormat), data };
     }
 
     /**

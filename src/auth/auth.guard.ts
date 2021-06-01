@@ -26,7 +26,7 @@ export class UserGuard implements CanActivate {
         const authTokenId = await this.authService.getAuthTokenByReToken(reToken);
         if (!authTokenId) {
             this.deleteAllAuthToken(res);
-            throw apiResponse.send(null, {});
+            throw apiResponse.sendError(403, {});
         }
         res.cookie('auth-token', authTokenId, { maxAge: 1000 * 60 * 5 });
         return await this.authService.getUserByAuthToken(authTokenId);
@@ -34,7 +34,6 @@ export class UserGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext) {
         const { req, res } = GqlExecutionContext.create(context).getContext<{ req: Request; res: Response }>();
-
         const role = this.reflector.get<UserRole>('role', context.getHandler());
 
         // get refreshToken and authToken
@@ -44,7 +43,7 @@ export class UserGuard implements CanActivate {
         //checking re-token
         if (!refreshToken) {
             res.cookie('re-token', '', { maxAge: 0 });
-            throw apiResponse.send(null, {});
+            throw apiResponse.sendError(403, {});
         }
 
         //checking auth-token
@@ -56,13 +55,13 @@ export class UserGuard implements CanActivate {
         //checking isDisabled user
         if (req.user.isDisabled) {
             this.deleteAllAuthToken(res);
-            throw apiResponse.send(null, { errorMessage: { type: 'error.user-banned' } });
+            throw apiResponse.sendError(403, { errorMessage: { type: 'error.user-banned' } });
         }
 
         //checking role
         if (role === UserRole.ADMIN && req.user.role !== UserRole.ADMIN) {
             this.deleteAllAuthToken(res);
-            throw apiResponse.send(null, { errorMessage: { type: 'error.not-allow-action' } });
+            throw apiResponse.sendError(403, { errorMessage: { type: 'error.not-allow-action' } });
         }
 
         return true;

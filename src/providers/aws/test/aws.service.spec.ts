@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Buffer } from 'buffer';
 import { Readable } from 'stream';
-
+import * as AWS from 'aws-sdk';
 //---- Helper
 import { initTestModule } from '../../../test/initTest';
 
@@ -11,7 +11,7 @@ import { AwsService } from '../aws.service';
 const mockS3Object = jest.fn();
 jest.mock('aws-sdk', () => {
     return {
-        ...jest.requireActual('aws-sdk'),
+        ...(jest.requireActual('aws-sdk') as typeof AWS),
         config: {
             update: jest.fn(),
         },

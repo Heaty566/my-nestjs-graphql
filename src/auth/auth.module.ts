@@ -9,10 +9,11 @@ import { FacebookStrategy } from './passport/facebook.strategy';
 import { GithubStrategy } from './passport/github.strategy';
 import { AuthController } from './auth.controller';
 import { JwtService } from '@nestjs/jwt';
-import { RedisModule } from 'src/utils/redis/redis.module';
+import { RedisModule } from '../utils/redis/redis.module';
+import { SmailModule } from '../providers/smail/smail.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([ReTokenRepository]), UserModule, RedisModule],
+    imports: [TypeOrmModule.forFeature([ReTokenRepository]), UserModule, RedisModule, SmailModule],
     controllers: [AuthController],
     providers: [
         AuthResolver,

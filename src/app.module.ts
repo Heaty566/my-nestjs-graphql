@@ -8,6 +8,9 @@ import { UserModule } from './user/user.module';
 import { ReToken } from './auth/entities/re-token.entity';
 import User from './user/entities/user.entity';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { AwsModule } from './providers/aws/aws.module';
+import { LoggerModule } from './utils/logger/logger.module';
+import { SmailModule } from './providers/smail/smail.module';
 
 const Config = ConfigModule.forRoot({
     isGlobal: true,
@@ -23,8 +26,8 @@ const DBConfig = TypeOrmModule.forRoot({
     database: process.env.DB_NAME,
     synchronize: true,
     keepConnectionAlive: true,
-    entities: [ReToken, User],
-    extra: { connectionLimit: 10 },
+    entities: [User, ReToken],
+    extra: { connectionLimit: 1 },
 });
 
 @Module({
@@ -43,7 +46,6 @@ const DBConfig = TypeOrmModule.forRoot({
                 res,
             }),
             formatError: (error: GraphQLError) => {
-                console.log(error);
                 const graphQLFormattedError: GraphQLFormattedError = {
                     message: error.extensions.details,
                     extensions: {
@@ -53,6 +55,9 @@ const DBConfig = TypeOrmModule.forRoot({
                 return graphQLFormattedError;
             },
         }),
+        AwsModule,
+        LoggerModule,
+        SmailModule,
         AuthModule,
         UserModule,
     ],

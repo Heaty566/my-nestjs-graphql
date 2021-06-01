@@ -1,7 +1,7 @@
 import { UseGuards } from '@nestjs/common';
 import { Context, Resolver, Query } from '@nestjs/graphql';
 import { Request } from 'express';
-import { UserGuard } from 'src/auth/auth.guard';
+import { UserGuard } from '../auth/auth.guard';
 import { UserSchema } from './entities/user.schema';
 import { UserService } from './user.service';
 
@@ -13,7 +13,7 @@ export class UserResolver {
     @Query(() => UserSchema)
     async getCurrentUser(@Context('req') req: Request): Promise<UserSchema> {
         const user = await this.userService.findOneByField('id', req.user.id);
-        console.log(user);
+
         return {
             phone: user.phone,
             username: user.username,
